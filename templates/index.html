@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <title>raylib web game</title>
+    <style>
+        body { margin: 0px; }
+        canvas.emscripten { border: 0px none; background-color: black; }
+    </style>
+    <script type='text/javascript' src="https://cdn.jsdelivr.net/gh/eligrey/FileSaver.js/dist/FileSaver.min.js"> </script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    </head>
+    <body>
+        <canvas class=emscripten id=canvas oncontextmenu=event.preventDefault() tabindex=-1></canvas>
+        <p id="output" />
+        <button id="myButton">click!</button>
+        <input type="text" id="myTextBox" />
+        <script>
+            var Module = {
+                onRuntimeInitialized: (function() {
+                    document.getElementById('myButton').addEventListener('click', () => {
+                        let inputValue = document.getElementById('myTextBox').value;
+                        Module.ccall('ask_gpt', null, ['string'], [inputValue]);
+                    });
+                }),
+                canvas: (function() {
+                    var canvas = document.getElementById('canvas');
+                    return canvas;
+                })()
+            };
+
+            async function ask_gpt_js(key)
+            {
+                const res = await axios.post("/gpt", { 
+                    text: String(key),
+                    model: "gpt-4.1-mini"
+                });
+                Module.set_gpt_response(res.data.output); // sets the C++ global
+            }
+        </script>
+        <script src="index.js"></script>
+    </body>
+</html>
