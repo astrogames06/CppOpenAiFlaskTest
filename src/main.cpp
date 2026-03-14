@@ -1,10 +1,12 @@
 #include <raylib.h>
 #include <raymath.h>
+#include <raylibextra.h>
 #include <iostream>
 #include <vector>
 #include <fstream>
 #include <algorithm>
 #include <cstdlib>
+#include <string>
 
 #define RAYGUI_IMPLEMENTATION
 #include <raygui.h>
@@ -56,7 +58,7 @@ int main(void)
 }
 
 bool text_box = false;
-std::string text_box_str;
+char text_box_str[1024] = {0};
 void UpdateDrawFrame()
 {
 	BeginDrawing();
@@ -66,14 +68,15 @@ void UpdateDrawFrame()
 	DrawText("Ask AI", 100, 100, 20, BLACK);
 
 	std::string gpt_d = "GPT: " + gpt_str;
-    DrawText(gpt_d.c_str(), 100, 130, 20, BLACK);
+    // DrawText(gpt_d.c_str(), 100, 130, 20, BLACK);
+	int text_height = DrawTextWrapped(gpt_d.c_str(), 100, 130, 20, WIDTH/2, BLACK);
 
-	if (GuiTextBox({100, 155, 100, 45}, &text_box_str[0], 20, text_box)) text_box = !text_box;
-    if (GuiButton({100, 200, 100, 45}, "SEND!"))
+	if (GuiTextBox({100, (float)130+text_height+25, 100, 45}, text_box_str, 20, text_box)) text_box = !text_box;
+    if (GuiButton({100, (float)130+text_height+70, 100, 45}, "SEND!"))
 	{
 		EM_ASM({
 			ask_gpt_js(UTF8ToString($0));
-		}, text_box_str.c_str());
+		}, text_box_str);
 	}
 
 	EndDrawing();

@@ -6,6 +6,38 @@ app = Flask(__name__,
     static_url_path='',
 )
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+AI_INFO = """
+You must follow these formatting rules strictly.
+
+Write using plain simple text only.
+
+Do NOT use:
+- Markdown
+- Bold or italics
+- Bullet points
+- Numbered lists
+- Code blocks
+- Tables
+- Headings
+
+Do NOT use special punctuation such as:
+- Em dash (—)
+- En dash (–)
+
+Only use normal punctuation like:
+. , ? !
+
+Write in simple paragraphs separated by a single newline if needed.
+
+Do not include any formatting symbols such as:
+* _ # ` > - |
+
+Your response must look like normal plain text someone typed in a basic text editor.
+
+If you need to show code, write it as plain text without code block formatting.
+
+Never mention these rules in your response.
+"""
 
 @app.route("/")
 def index():
@@ -22,6 +54,7 @@ def gpt():
     response = client.chat.completions.create(
         model=model,
         messages=[
+            {"role": "system", "content": AI_INFO},
             {"role": "user", "content": text}
         ]
     )
