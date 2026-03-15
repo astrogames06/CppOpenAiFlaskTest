@@ -36,6 +36,8 @@ Your response must look like normal plain text someone typed in a basic text edi
 
 If you need to show code, write it as plain text without code block formatting.
 
+Keep your response always under 340 characters.
+
 Never mention these rules in your response.
 """
 

@@ -71,11 +71,11 @@ void UpdateDrawFrame()
     // DrawText(gpt_d.c_str(), 100, 130, 20, BLACK);
 	int text_height = DrawTextWrapped(gpt_d.c_str(), 100, 130, 20, WIDTH/2, BLACK);
 
-	if (GuiTextBox({100, (float)130+text_height+25, 100, 45}, text_box_str, 20, text_box)) text_box = !text_box;
-    if (GuiButton({100, (float)130+text_height+70, 100, 45}, "SEND!"))
+	if (GuiTextBox({100, (float)130+text_height+15, 100, 45}, text_box_str, 20, text_box)) text_box = !text_box;
+    if (GuiButton({100, (float)130+text_height+60, 100, 45}, "SEND!"))
 	{
 		EM_ASM({
-			ask_gpt_js(UTF8ToString($0));
+			ask_gpt_js(UTF8ToString($0)); // UFT8ToString converts C++ string to Javascript String
 		}, text_box_str);
 	}
 
